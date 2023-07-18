@@ -35,7 +35,7 @@ PRODUCT_PACKAGES += \
 #BOARD_SEPOLICY_DIRS += device/devtitans/carbosensor/sepolicy
 
 # Smartlamp AIDL Interface
-#PRODUCT_PACKAGES += devtitans.smartlamp
+PRODUCT_PACKAGES += devtitans.smartcarbo
 
 # Smartlamp Binder Service
 #PRODUCT_PACKAGES += devtitans.smartlamp-service
