@@ -12,9 +12,10 @@ MODULE_LICENSE("GPL");
 static int  usb_probe(struct usb_interface *ifce, const struct usb_device_id *id); // Executado quando o dispositivo é conectado na USB
 static void usb_disconnect(struct usb_interface *ifce);                            // Executado quando o dispositivo USB é desconectado da USB
 static int  usb_send_cmd(char *cmd, int param);                                    // Envia um comando via USB e espera/retorna a resposta do dispositivo (int)
-// Executado quando o arquivo /sys/kernel/smartcarbosensor/{led, ldr} é lido (e.g., cat /sys/kernel/smartcarbosensor/led)
+// Executado quando o arquivo /sys/kernel/smartcarbosensor/{led, mq7} é lido (e.g., cat /sys/kernel/smartcarbosensor/led)
 static ssize_t attr_show(struct kobject *sys_obj, struct kobj_attribute *attr, char *buff);
-// Executado quando o arquivo /sys/kernel/smartcarbosensor/{led, ldr} é escrito (e.g., echo "100" | sudo tee -a /sys/kernel/smartcarbosensor/led)
+
+// Executado quando o arquivo /sys/kernel/smartcarbosensor/{led, mq7} é escrito (e.g., echo "100" | sudo tee -a /sys/kernel/smartcarbosensor/led)
 static ssize_t attr_store(struct kobject *sys_obj, struct kobj_attribute *attr, const char *buff, size_t count);
 
 static char recv_line[MAX_RECV_LINE];              // Armazena dados vindos da USB até receber um caractere de nova linha '\n'
@@ -23,10 +24,10 @@ static uint usb_in, usb_out;                       // Endereços das portas de e
 static char *usb_in_buffer, *usb_out_buffer;       // Buffers de entrada e saída da USB
 static int usb_max_size;                           // Tamanho máximo de uma mensagem USB
 
-// Variáveis para criar os arquivos no /sys/kernel/smartcarbosensor/{led, ldr}
+// Variáveis para criar os arquivos no /sys/kernel/smartcarbosensor/{led, mq7}
 static struct kobj_attribute  led_attribute = __ATTR(led, S_IRUGO | S_IWUSR, attr_show, attr_store);
-static struct kobj_attribute  ldr_attribute = __ATTR(ldr, S_IRUGO | S_IWUSR, attr_show, attr_store);
-static struct attribute      *attrs[]       = { &led_attribute.attr, &ldr_attribute.attr, NULL };
+static struct kobj_attribute  mq7_attribute = __ATTR(mq7, S_IRUGO | S_IWUSR, attr_show, attr_store);
+static struct attribute      *attrs[]       = { &led_attribute.attr, &mq7_attribute.attr, NULL };
 static struct attribute_group attr_group    = { .attrs = attrs };
 static struct kobject        *sys_obj;
 
@@ -84,7 +85,7 @@ static int usb_send_cmd(char *cmd, int param) {
     int retries = 10;                       // Tenta algumas vezes receber uma resposta da USB. Depois desiste.
     char resp_expected[MAX_RECV_LINE];      // Resposta esperada do comando
     char *resp_pos;                         // Posição na linha lida que contém o número retornado pelo dispositivo
-    long resp_number = -1;                  // Número retornado pelo dispositivo (e.g., valor do led, valor do ldr)
+    long resp_number = -1;                  // Número retornado pelo dispositivo (e.g., valor do led, valor do mq7)
 
     printk(KERN_INFO "SmartCarbo: Enviando comando: %s\n", cmd);
 
@@ -140,7 +141,7 @@ static int usb_send_cmd(char *cmd, int param) {
     return -1; // Não recebi a resposta esperada do dispositivo
 }
 
-// Executado quando o arquivo /sys/kernel/smartcarbosensor/{led, ldr} é lido (e.g., cat /sys/kernel/smartcarbosensor/led)
+// Executado quando o arquivo /sys/kernel/smartcarbosensor/{led, mq7} é lido (e.g., cat /sys/kernel/smartcarbosensor/led)
 static ssize_t attr_show(struct kobject *sys_obj, struct kobj_attribute *attr, char *buff) {
     int value;
     const char *attr_name = attr->attr.name;
@@ -150,13 +151,13 @@ static ssize_t attr_show(struct kobject *sys_obj, struct kobj_attribute *attr, c
     if (!strcmp(attr_name, "led"))
         value = usb_send_cmd("GET_LED", -1);
     else
-        value = usb_send_cmd("GET_LDR", -1);
+        value = usb_send_cmd("GET_MQ7", -1);
 
-    sprintf(buff, "%d\n", value);                   // Cria a mensagem com o valor do led ou ldr
+    sprintf(buff, "%d\n", value);                   // Cria a mensagem com o valor do led ou mq7
     return strlen(buff);
 }
 
-// Executado quando o arquivo /sys/kernel/smartcarbosensor/{led, ldr} é escrito (e.g., echo "100" | sudo tee -a /sys/kernel/smartcarbosensor/led)
+// Executado quando o arquivo /sys/kernel/smartcarbosensor/{led, mq7} é escrito (e.g., echo "100" | sudo tee -a /sys/kernel/smartcarbosensor/led)
 static ssize_t attr_store(struct kobject *sys_obj, struct kobj_attribute *attr, const char *buff, size_t count) {
     long ret, value;
     const char *attr_name = attr->attr.name;
@@ -172,7 +173,7 @@ static ssize_t attr_store(struct kobject *sys_obj, struct kobj_attribute *attr, 
     if (!strcmp(attr_name, "led"))
         ret = usb_send_cmd("SET_LED", value);
     else {
-        printk(KERN_ALERT "SmartCarbo: o valor do ldr (sensor de monoxido) eh apenas para leitura.\n");
+        printk(KERN_ALERT "SmartCarbo: o valor do mq7 (sensor de monoxido) eh apenas para leitura.\n");
         return -EACCES;
     }
     if (ret < 0) {
