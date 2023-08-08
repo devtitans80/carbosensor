@@ -7,7 +7,7 @@ int ledChannel = 0;
 int ledValue = 0;
 int ledMode = MODE_MANUAL;
 
-int ldrPin = 36;
+int CarboSensorPin = 35;
 int ldrMax = 4000;
 
 int thresholdValue = 50;
@@ -16,7 +16,7 @@ int enabled = 0;
 int pool_delay = 200;
 
 void setup() {
-    Serial.begin(9600);
+    Serial.begin(115200);
 
     pinMode(LED_BUILTIN, OUTPUT);
     for (int i=9; i>=0; i--) {
@@ -147,10 +147,7 @@ void ledUpdate() {
 }
 
 int ldrGetValue() {
-    int ldrAnalog = analogRead(ldrPin);
-    int ldrValue = 100*ldrAnalog/ldrMax;
+    int ldrAnalog = analogRead(CarboSensorPin);
 
-    // Serial.printf("DBG LDR_MAX=%d, LDR_ANALOG=%d, LDR_VALUE=%d\n", ldrMax, ldrAnalog, ldrValue);
-
-    return ldrValue > 100 ? 100 : ldrValue;
+    return ldrAnalog;
 }
