@@ -1,8 +1,6 @@
 int CarboSensorPin = 35;
 int ldrMax = 4000;
 
-int thresholdValue = 1800;
-
 int enabled = 0;
 int pool_delay = 200;
 
@@ -37,18 +35,7 @@ void processCommand(String command) {
     if (command == "GET_MQ7") {
       Serial.printf("GAS VALUE: %d\n", mq7GetValue());
     }
-      
-    else if (command.startsWith("SET_THRESHOLD ")) {
-        int thresholdTmp = command.substring(14).toInt();
-        if (thresholdTmp >= 0 && thresholdTmp <= 100) {
-            thresholdValue = thresholdTmp;
-            Serial.printf("RES SET_THRESHOLD 1\n");
-        }
-        else {
-            Serial.printf("RES SET_THRESHOLD -1\n");
-        }
-    }
-
+    
     else if (command.startsWith("ENABLED ")) {
         int enableValue = command.substring(8).toInt();
 
@@ -76,9 +63,6 @@ void processCommand(String command) {
             Serial.printf("RES POLL_DELAY -1\n");
         }
     }
-    
-    else if (command == "GET_THRESHOLD")
-      Serial.printf("RES GET_THRESHOLD %d\n", thresholdValue);
     
     else
       Serial.println("ERR Unknown command.");
