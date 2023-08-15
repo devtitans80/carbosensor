@@ -5,8 +5,8 @@ int enabled = 0;
 int pool_delay = 200;
 
 void setup() {
-    Serial.begin(115200);    
-    Serial.printf("DBG SmartCarbo Initialized.\n");
+    Serial.begin(9600);    
+    Serial.printf("DBG CarboSensor Initialized.\n");
 }
 
 void loop() {
@@ -30,10 +30,8 @@ void processCommand(String command) {
     command.trim();
     command.toUpperCase();
 
-    // Serial.println("DBG Received command: " + command);
-
     if (command == "GET_MQ7") {
-      Serial.printf("GAS VALUE: %d\n", mq7GetValue());
+      Serial.printf("RES GET_MQ7 %d\n", mq7GetValue());
     }
     
     else if (command.startsWith("ENABLED ")) {
