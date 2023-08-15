@@ -148,10 +148,7 @@ static ssize_t attr_show(struct kobject *sys_obj, struct kobj_attribute *attr, c
 
     printk(KERN_INFO "SmartCarbo: Lendo %s ...\n", attr_name);
 
-    if (strcmp(attr_name, "mq7"))
-        value = usb_send_cmd("GET_MQ7", -1);
-    else
-        value = 0;
+    value = usb_send_cmd("GET_MQ7", -1);
 
     sprintf(buff, "%d\n", value);                   // Cria a mensagem com o valor do mq7
     return strlen(buff);
