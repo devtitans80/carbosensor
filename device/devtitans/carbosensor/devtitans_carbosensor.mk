@@ -8,11 +8,10 @@ PRODUCT_BRAND := carboSensorBrand
 PRODUCT_MODEL := carboSensorModel
 
 # Copia o arquivo devtitans.txt para o /system/etc da imagem do Android
-#PRODUCT_COPY_FILES += \
+PRODUCT_COPY_FILES += \
 ##	device/devtitans/kraken/devtitans.txt:system/etc/devtitans.txt \
 #	device/devtitans/kraken/kraken.rc:vendor/etc/init/kraken.rc \
-#	device/devtitans/kraken/bootanimation.zip:product/media/bootanimation.zip \
-#	device/devtitans/kraken/default_wallpaper2.png:product/media/wallpaper/default_wallpaper2.png
+	device/devtitans/carbosensor/bootanimation.zip:product/media/bootanimation.zip
 
 PRODUCT_SYSTEM_PROPERTIES += \
 	ro.devtitans.name=carboSensor
