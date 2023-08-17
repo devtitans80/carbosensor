@@ -1,5 +1,4 @@
 int CarboSensorPin = 35;
-int ldrMax = 4000;
 
 int enabled = 0;
 int pool_delay = 200;
@@ -63,7 +62,7 @@ void processCommand(String command) {
     }
     
     else
-      Serial.println("ERR Unknown command.");
+      Serial.println("ERR Unknown command.\n");
       
 }
 
