@@ -22,4 +22,4 @@ bzImage
 modules
 "
 
-EXT_MODULES+=" smartcarbo-module"
+EXT_MODULES+=" carbosensor-module"
