@@ -1,6 +1,6 @@
 #include "carbosensor_service.h"
 
-using namespace aidl::devtitans::carbosensor;                // SmartlampService (smartlamp_service.cpp)
+using namespace aidl::devtitans::carbosensor;                // CarboSensorService (carbosensor_service.cpp)
 using namespace std;                                       // std::shared_ptr
 using namespace ndk;                                       // ndk::SharedRefBase
 
