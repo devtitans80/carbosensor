@@ -62,7 +62,7 @@ void processCommand(String command) {
     }
     
     else
-      Serial.println("ERR Unknown command.\n");
+      Serial.printlf("ERR Unknown command.\n");
       
 }
 
